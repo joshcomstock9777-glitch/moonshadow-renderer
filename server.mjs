@@ -73,8 +73,7 @@ function renderStillCard({ title, outputPath }) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url || "/", `http://${req.headers.host}`);
 
-  if (url.pathname === "/health" && req.method === "GET") {
-    if (!checkAuth(req)) return unauthorized(res);
+  if ((url.pathname === "/" || url.pathname === "/health") && req.method === "GET") {
     const ok = ffmpegOk();
     return json(res, ok ? 200 : 503, {
       connected: ok,
@@ -122,6 +121,6 @@ const server = http.createServer(async (req, res) => {
   res.end("not found");
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`moonshadow-renderer on :${PORT} ffmpeg=${ffmpegOk()}`);
 });
