@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 8787);
 const TOKEN = process.env.RENDERER_WORKER_TOKEN || "";
-const PUBLIC_BASE = (process.env.PUBLIC_BASE_URL || `http://127.0.0.1:${PORT}`).replace(/\/+$/, "");
+const PUBLIC_BASE = (process.env.PUBLIC_BASE_URL || "https://moonshadow-renderer.fly.dev").replace(/\/+$/, "");
 const OUT = process.env.OUTPUT_DIR || path.join(__dirname, "data", "out");
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -122,5 +122,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`moonshadow-renderer on :${PORT} ffmpeg=${ffmpegOk()}`);
+  console.log(`moonshadow-renderer on :${PORT} ffmpeg=${ffmpegOk()} public=${PUBLIC_BASE}`);
 });
