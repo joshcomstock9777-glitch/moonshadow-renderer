@@ -28,7 +28,7 @@ function unauthorized(res) {
 }
 
 function checkAuth(req) {
-  if (!TOKEN) return true;
+  if (!TOKEN) return false;
   const header = req.headers.authorization || "";
   return header === `Bearer ${TOKEN}`;
 }
@@ -78,6 +78,7 @@ const server = http.createServer(async (req, res) => {
     return json(res, ok ? 200 : 503, {
       connected: ok,
       backend: "ffmpeg-worker",
+      tokenConfigured: Boolean(TOKEN),
       message: ok ? "FFmpeg present" : "FFmpeg missing",
     });
   }
@@ -93,6 +94,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (url.pathname === "/renders" && req.method === "POST") {
+    if (!TOKEN) return json(res, 503, { rendered: false, message: "AUTH_NOT_CONFIGURED" });
     if (!checkAuth(req)) return unauthorized(res);
     if (!ffmpegOk()) return json(res, 503, { rendered: false, message: "FFmpeg missing" });
     try {
@@ -122,5 +124,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`moonshadow-renderer on :${PORT} ffmpeg=${ffmpegOk()} public=${PUBLIC_BASE}`);
+  console.log(`moonshadow-renderer on :${PORT} ffmpeg=${ffmpegOk()} public=${PUBLIC_BASE} token=${TOKEN ? "set" : "missing"}`);
 });
