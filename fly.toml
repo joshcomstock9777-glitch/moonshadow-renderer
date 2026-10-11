@@ -11,6 +11,7 @@ primary_region = 'iad'
 [env]
   PUBLIC_BASE_URL = 'https://moonshadow-renderer.fly.dev'
   OUTPUT_DIR = '/data/out'
+  EXPORT_YOUTUBE_DIR = '/data/exports/youtube'
 
 [http_service]
   internal_port = 8787
